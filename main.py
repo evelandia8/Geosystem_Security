@@ -52,9 +52,9 @@ def getGPS(gpsModule):
         parts = buff.split(',')
         print(parts[0], len(parts))
         oled.fill(0)
-        oled.text(parts[0], len(parts), 0, 10)
-        oled.text("Buscando ", 0, 10)
-        oled.text("Satelites... ", 0, 20)
+        oled.text(parts[0], 0, 10)
+        oled.text("Buscando ", 0, 20)
+        oled.text("Satelites... ", 0, 30)
         oled.show()
         if (parts[0] == "b'$GNGGA" and len(parts) == 15):
             if(parts[1] and parts[2] and parts[3] and parts[4] and parts[5] and parts[6] and parts[7]):
