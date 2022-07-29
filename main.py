@@ -6,7 +6,7 @@ from Lib.sh1106 import SH1106_I2C  # Importamos el módulo de funcionamiento de 
 import framebuf # Módulo para visualizar imagenes en pbm
 
 # Conexion de pines del display Oled- ESP32.
-i2c = SoftI2C(scl=Pin(22), sda=Pin(21), freq=10000) # initializing the I2C method for ESP32
+i2c = SoftI2C(scl=Pin(22), sda=Pin(21), freq=10000) # Inicializando el método I2C para ESP32
 oled = SH1106_I2C(128, 64, i2c)
 
 
@@ -25,17 +25,17 @@ satellites = ""
 
 # Importa logo de Geosystem_Security
 def buscar_icono(ruta):
-    dibujo = open(ruta, "rb")  # Abrir en modo lectura de bits https://python-intermedio.readthedocs.io/es/latest/open_function.html
+    dibujo = open(ruta, "rb")  # Abrir en modo lectura de bits
     dibujo.readline() # Metodo para ubicarse en la primera linea de los bist
-    xy = dibujo.readline() # Ubicarnos en la segunda linea
-    x = int(xy.split()[0]) # Split  devuelve una lista de los elementos de la variable solo 2 elemetos
-    y = int(xy.split()[1])
+    z = dibujo.readline() # Ubicarnos en la segunda linea
+    x = int(z.split()[0]) # Devuelve una lista de los elementos de la variable solo 2 elemetos
+    y = int(z.split()[1])
     icono = bytearray(dibujo.read()) # Guardar en matriz de bites
     dibujo.close()
-    return framebuf.FrameBuffer(icono, x, y, framebuf.MONO_HLSB) #Utilizamos el metodo MONO_HLSB
+    return framebuf.FrameBuffer(icono, x, y, framebuf.MONO_HLSB) # Utilizamos el metodo MONO_HLSB
 
 oled.blit(buscar_icono("Img/Geosystem.pbm"), 0, 0) # Ruta y sitio de ubicación del directorio
-oled.show()  #Mostrar en la oled
+oled.show()  # Mostrar en la oled
 time.sleep(3) # Espera de 3 segundos
 oled.fill(0)
 oled.show()
@@ -49,25 +49,25 @@ def getGPS(gpsModule):
     while True:
         gpsModule.readline()
         buff = str(gpsModule.readline())
-        parts = buff.split(',')
-        print(parts[0], len(parts))
+        parte = buff.split(',')
+        print(parte[0], len(parte))
         oled.fill(0)
-        oled.text(parts[0], 0, 10)
+        oled.text(parte[0], 0, 10)
         oled.text("Buscando ", 0, 20)
         oled.text("Satelites... ", 0, 30)
         oled.show()
-        if (parts[0] == "b'$GNGGA" and len(parts) == 15):
-            if(parts[1] and parts[2] and parts[3] and parts[4] and parts[5] and parts[6] and parts[7]):
+        if (parte[0] == "b'$GNGGA" and len(parte) == 15):
+            if(parte[1] and parte[2] and parte[3] and parte[4] and parte[5] and parte[6] and parte[7]):
                 print(buff)
                 
-                latitude = convertToDegree(parts[2])
-                if (parts[3] == 'S'):
+                latitude = convertToDegree(parte[2])
+                if (parte[3] == 'S'):
                     latitude = str(-float(latitude))
-                longitude = convertToDegree(parts[4])
-                if (parts[5] == 'W'):
+                longitude = convertToDegree(parte[4])
+                if (parte[5] == 'W'):
                     longitude = str(-float(longitude))
-                satellites = parts[7]
-                GPStime = parts[1][0:2] + ":" + parts[1][2:4] + ":" + parts[1][4:6]
+                satellites = parte[7]
+                GPStime = parte[1][0:2] + ":" + parte[1][2:4] + ":" + parte[1][4:6]
                 FIX_STATUS = True
                 break
                 
@@ -92,7 +92,7 @@ while True:
     code = 1
     
     if(TIMEOUT == True):
-        print("No GPS data is found.")
+        print("GPS No se pudo conectar al satelite.")
         TIMEOUT = False
     
     if(FIX_STATUS == True):
@@ -126,7 +126,7 @@ while True:
             Hora = ("{:02d}:{:02d}:{:02d}".format(RTC().datetime()[4], RTC().datetime()[5], RTC().datetime()[6]))
             
             print("----------------------")
-            print("Printing GPS data...")
+            print("Impresión de datos GPS...")
             print(" ")
             print("Ubicacion del paquete")
             print("Latitude: "+latitude)
